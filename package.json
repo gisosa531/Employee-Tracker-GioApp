@@ -1,0 +1,25 @@
+{
+  "name": "employee-tracker-gioapp",
+  "version": "1.0.0",
+  "description": "This is a command-line application from built from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gisosa531/Employee-Tracker-GioApp.git"
+  },
+  "author": "Giovanni Sosa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gisosa531/Employee-Tracker-GioApp/issues"
+  },
+  "homepage": "https://github.com/gisosa531/Employee-Tracker-GioApp#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.1.2",
+    "mysql2": "^2.3.0"
+  }
+}
