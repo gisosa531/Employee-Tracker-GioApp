@@ -13,4 +13,4 @@ VALUES
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
-    ('Hank', 'Hill', 1, NULL),
+    ('Dexter  ', 'McPherson', 1, NULL),

@@ -39,8 +39,8 @@ This Project is licensed under [MIT](https://opensource.org/licenses/MIT)
 ## Contribution Guidelines
 Thanks to:
 * [https://www.npmjs.com/package/mysql2](https://www.npmjs.com/package/mysql2)
-* []()
-* []()
+* [https://www.npmjs.com/package/inquirer](https://www.npmjs.com/package/inquirer)
+* [https://www.npmjs.com/package/console.table](https://www.npmjs.com/package/console.table)
 
 ## GitHub Repo 
 * [https://github.com/gisosa531/Employee-Tracker-GioApp](https://github.com/gisosa531/Employee-Tracker-GioApp)
