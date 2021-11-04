@@ -1,18 +1,27 @@
-const mysql = require("mysql2");
 const inquirer = require("inquirer");
-const table = require("console.table");
-const app = express();
-const PORT = process.env.PORT || 3006;
+require('console.table');
+const logo = require('asciiart-logo');
+const db = require("./config/connection");
+ 
+const initPrompt = () => {
+  const logoInfo = logo({
+    name: 'Employee Tracker',
+    font: 'Doom',
+    lineChars: 10,
+    padding: 2.5,
+    margin: 3.5,
+    borderColor: 'grey',
+    logoColor: 'bold-green',
+    textColor: 'green',
+})
+.emptyLine()
+.right('version by Giovanni Sosa')
+.emptyLine()
+.center('Administrating your work environment')
+.render();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+console.log(logoInfo);
 
-const db = mysql.createConnection({
-  host: "localhost",
-  port: 3306,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-});
+};
 
 
