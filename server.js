@@ -34,15 +34,15 @@ const renderPrompt = () => {
         name: "choice",
         choices: [
           "View all Employees",
-          "View All Departments?",
-          // "View All Roles?",
+          "View all Departments",
+          "View all Roles",
           // "View Employees by Department",
           // "View Employees by Manager",
-          // "Add Employee?",
-          // "Add Department?",
-          // "Add Role?",
-          // "Update Employee's Role?",
-          // "Update Employee Manager?",
+          // "Add Employee",
+          // "Add Department",
+          // "Add Role",
+          // "Update Employee's Role",
+          // "Update Employee Manager",
           // "Delete Employee",
           // "Delete Department",
           // "View Budget by Department",
@@ -50,16 +50,17 @@ const renderPrompt = () => {
         ]
       }
     ]).then(res => {
+      console.log(res.choice)
       switch (res.choice) {
-        case "View All Employees":
+        case "View all Employees":
           viewAllEmploy();
           break;
-        case "View All Departments":
+        case "View all Departments":
           viewAllDepart();
           break;
-        // case "View All Roles":
-        //   viewAllRoles();
-        //   break;
+        case "View all Roles":
+          viewAllRoles();
+          break;
         // case "View Employees by Department":
         //   viewEmployByDepart();
         //   break;
@@ -100,31 +101,35 @@ const renderPrompt = () => {
     });
 }
 
-
-
-
-
 const viewAllEmploy = () => {
   dbconnect.query("SELECT * FROM employee",
-  function (err, results) {
-    if (err) throw err
-    console.table(results)
-    renderPrompt();
-  })
+    function (err, res) {
+      if (err) throw err
+      console.table(res)
+      renderPrompt();
+    }
+  )
 }
 
 const viewAllDepart = () => {
-  dbconnect.query("SELECT department.id, department.depart_name FROM department;",
-  function (err, res) {
-    if (err) throw err 
-    console.table(res)
-    renderPrompt();
-  }
+  dbconnect.query("SELECT id as 'ID', dept_name AS 'Department Name' FROM department;",
+    function (err, res) {
+      if (err) throw err
+      console.table(res)
+      renderPrompt();
+    }
   )
 }
-// const viewAllRoles = () => {
-//   dbconnect.query("SELECT ")
-// }
+
+const viewAllRoles = () => {
+  dbconnect.query("SELECT roles.id, roles.title, department.dept_name AS 'Department Name', roles.salary FROM roles LEFT JOIN department on roles.department_id = department.id;",
+    function (err, res) {
+      if (err) throw err
+      console.table(res)
+      renderPrompt();
+    }
+  )
+}
 // const viewEmployByDepart = () => {
 
 // }
