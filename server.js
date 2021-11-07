@@ -39,12 +39,12 @@ const renderPrompt = () => {
           // "View Employees by Department",
           // "View Employees by Manager",
           // "Add Employee",
-          // "Add Department",
+          "Add Department",
           // "Add Role",
           // "Update Employee's Role",
           // "Update Employee Manager",
           // "Delete Employee",
-          // "Delete Department",
+          "Delete Department",
           // "View Budget by Department",
           "Exit App"
         ]
@@ -70,9 +70,9 @@ const renderPrompt = () => {
         // case "Add Employee":
         //   addEmploy();
         //   break;
-        // case "Add Department":
-        //   addDepart();
-        //   break;
+        case "Add Department":
+          addDepart();
+          break;
         // case "Add Role":
         //   addRole();
         //   break;
@@ -85,9 +85,9 @@ const renderPrompt = () => {
         // case "Delete Employee":
         //   delEmploy();
         //   break;
-        // case "Delete Department":
-        //   delDepart();
-        //   break;
+        case "Delete Department":
+          delDepart();
+          break;
         // case "View Budget by Department":
         //   viewBudget();
         //   break;
@@ -140,9 +140,25 @@ const viewAllRoles = () => {
 // const addEmploy = () => {
 
 // }
-// const addDepart = () => {
+const addDepart = () => {
+  inquirer.prompt([
+    {
+    type: "input",
+    name: "dept_name",
+    message: "What is the name of the new department that you want to add? "
+  }]).then(res => {
+    dbconnect.query("INSERT INTO department SET ? ", {
+        dept_name: res.dept_name
+      },
+      function (err) {
+        if (err) throw err
+        console.log("Added " + res.dept_name +  " to department database!");
+        renderPrompt();
+      }
+    )
+  })
+};
 
-// }
 // const addRole = () => {
 
 // }
@@ -158,9 +174,31 @@ const viewAllRoles = () => {
 // const delEmploy = () => {
 
 // }
-// const delDepart = () => {
-
-// }
+const delDepart = () => {
+  dbconnect.query("SELECT * FROM department",
+  function (err, res) {
+    if (err) throw err;
+    const departmentChoices = res.map(({
+      id,
+      dept_name
+    }) => ({
+      dept_name: dept_name,
+      value: id
+    }));
+    inquirer.prompt([{
+      type: 'list',
+      name: 'dept_name',
+      message: 'Which Department do you wish to remove?',
+      choices: departmentChoices
+    }])
+    .then(res => dbconnect.query(`DELETE from department WHERE department.id = ${res.dept_name}`),
+    function (err, res) {
+      if (err) throw err; 
+    console.log('Removed department choice from database!')
+    renderPrompt()
+  });
+});
+};
 
 // const viewBudget = () => {
 
