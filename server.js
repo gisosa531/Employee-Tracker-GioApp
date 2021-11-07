@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 require('console.table');
 const logo = require('asciiart-logo');
-const db = require("./config/connection");
+const dbconnect = require("./config/connection");
 
 //AsciiArt Logo 
 const initPrompt = () => {
@@ -35,17 +35,17 @@ const renderPrompt = () => {
         choices: [
           "View all Employees",
           "View All Departments?",
-          "View All Roles?",
-          "View Employees by Department",
-          "View Employees by Manager",
-          "Add Employee?",
-          "Add Department?",
-          "Add Role?",
-          "Update Employee's Role?",
-          "Update Employee Manager?",
-          "Delete Employee",
-          "Delete Department",
-          "View Budget by Department",
+          // "View All Roles?",
+          // "View Employees by Department",
+          // "View Employees by Manager",
+          // "Add Employee?",
+          // "Add Department?",
+          // "Add Role?",
+          // "Update Employee's Role?",
+          // "Update Employee Manager?",
+          // "Delete Employee",
+          // "Delete Department",
+          // "View Budget by Department",
           "Exit App"
         ]
       }
@@ -57,42 +57,42 @@ const renderPrompt = () => {
         case "View All Departments":
           viewAllDepart();
           break;
-        case "View All Roles":
-          viewAllRoles();
-          break;
-        case "View Employees by Department":
-          viewEmployByDepart();
-          break;
-        case "View Employees by Manager":
-          viewEmployByManage();
-          break;
-        case "Add Employee":
-          addEmploy();
-          break;
-        case "Add Department":
-          addDepart();
-          break;
-        case "Add Role":
-          addRole();
-          break;
-        case "Update Employee Role":
-          updateEmployRole();
-          break;
-        case "Update Employee Manager":
-          updateEmployManage();
-          break;
-        case "Delete Employee":
-          delEmploy();
-          break;
-        case "Delete Department":
-          delDepart();
-          break;
-        case "View Budget by Department":
-          viewBudget();
-          break;
+        // case "View All Roles":
+        //   viewAllRoles();
+        //   break;
+        // case "View Employees by Department":
+        //   viewEmployByDepart();
+        //   break;
+        // case "View Employees by Manager":
+        //   viewEmployByManage();
+        //   break;
+        // case "Add Employee":
+        //   addEmploy();
+        //   break;
+        // case "Add Department":
+        //   addDepart();
+        //   break;
+        // case "Add Role":
+        //   addRole();
+        //   break;
+        // case "Update Employee Role":
+        //   updateEmployRole();
+        //   break;
+        // case "Update Employee Manager":
+        //   updateEmployManage();
+        //   break;
+        // case "Delete Employee":
+        //   delEmploy();
+        //   break;
+        // case "Delete Department":
+        //   delDepart();
+        //   break;
+        // case "View Budget by Department":
+        //   viewBudget();
+        //   break;
         case "Exit App":
           console.log("Bye-bye!");
-          db.end();
+          dbconnect.end();
           break;
         default:
           break;
@@ -101,51 +101,65 @@ const renderPrompt = () => {
 }
 
 
-initPrompt();
+
 
 
 const viewAllEmploy = () => {
-
+  dbconnect.query("SELECT * FROM employee",
+  function (err, results) {
+    if (err) throw err
+    console.table(results)
+    renderPrompt();
+  })
 }
 
 const viewAllDepart = () => {
-
+  dbconnect.query("SELECT department.id, department.depart_name FROM department;",
+  function (err, res) {
+    if (err) throw err 
+    console.table(res)
+    renderPrompt();
+  }
+  )
 }
-const viewAllRoles = () => {
+// const viewAllRoles = () => {
+//   dbconnect.query("SELECT ")
+// }
+// const viewEmployByDepart = () => {
 
-}
-const viewEmployByDepart = () => {
+// }
+// const viewEmployByManage = () => {
 
-}
-const viewEmployByManage = () => {
+// }
 
-}
+// const addEmploy = () => {
 
-const addEmploy = () => {
+// }
+// const addDepart = () => {
 
-}
-const addDepart = () => {
+// }
+// const addRole = () => {
 
-}
-const addRole = () => {
+// }
 
-}
+// const updateEmployRole = () => {
 
-const updateEmployRole = () => {
+// }
+// const updateEmployManage = () => {
 
-}
-const updateEmployManage = () => {
-
-}
+// }
 
 
-const delEmploy = () => {
+// const delEmploy = () => {
 
-}
-const delDepart = () => {
+// }
+// const delDepart = () => {
 
-}
+// }
 
-const viewBudget = () => {
+// const viewBudget = () => {
 
-}
+// }
+
+
+initPrompt();
