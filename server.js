@@ -143,20 +143,20 @@ const viewAllRoles = () => {
 const addDepart = () => {
   inquirer.prompt([
     {
-    type: "input",
-    name: "dept_name",
-    message: "What is the name of the new department that you want to add? "
-  }]).then(res => {
-    dbconnect.query("INSERT INTO department SET ? ", {
+      type: "input",
+      name: "dept_name",
+      message: "What is the name of the new department that you want to add? "
+    }]).then(res => {
+      dbconnect.query("INSERT INTO department SET ? ", {
         dept_name: res.dept_name
       },
-      function (err) {
-        if (err) throw err
-        console.log("Added " + res.dept_name +  " to department database!");
-        renderPrompt();
-      }
-    )
-  })
+        function (err) {
+          if (err) throw err
+          console.log("Added " + res.dept_name + " to department database!");
+          renderPrompt();
+        }
+      )
+    })
 };
 
 // const addRole = () => {
@@ -175,30 +175,32 @@ const addDepart = () => {
 
 // }
 const delDepart = () => {
-  dbconnect.query("SELECT * FROM department",
-  function (err, res) {
-    if (err) throw err;
-    const departmentChoices = res.map(({
-      id,
-      dept_name
-    }) => ({
-      dept_name: dept_name,
-      value: id
-    }));
-    inquirer.prompt([{
-      type: 'list',
-      name: 'dept_name',
-      message: 'Which Department do you wish to remove?',
-      choices: departmentChoices
-    }])
-    .then(res => dbconnect.query(`DELETE from department WHERE department.id = ${res.dept_name}`),
-    function (err, res) {
-      if (err) throw err; 
-    console.log('Removed department choice from database!')
-    renderPrompt()
-  });
-});
+  dbconnect.promise().query("SELECT * FROM department")
+  .then(([rows]) => {
+    let depart = rows;
+      const departmentChoices = depart.map(({
+        id,
+        dept_name
+      }) => ({
+        name: dept_name,
+        value: id
+      }));
+
+      inquirer.prompt([{
+        type: 'list',
+        name: 'dept_name',
+        message: 'Which Department do you wish to remove?',
+        choices: departmentChoices
+      }])
+        .then(res => dbconnect.query(`DELETE FROM department WHERE department.id = ${res.dept_name}`,
+          function (err, res) {
+            if (err) throw err;
+            console.log('Removed department choice from database!')
+            renderPrompt()
+          }));
+    });
 };
+
 
 // const viewBudget = () => {
 
