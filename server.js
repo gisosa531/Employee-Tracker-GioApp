@@ -38,7 +38,7 @@ const renderPrompt = () => {
           "View all Roles",
           // "View Employees by Department",
           // "View Employees by Manager",
-          // "Add Employee",
+          "Add Employee",
           "Add Department",
           // "Add Role",
           // "Update Employee's Role",
@@ -67,9 +67,9 @@ const renderPrompt = () => {
         // case "View Employees by Manager":
         //   viewEmployByManage();
         //   break;
-        // case "Add Employee":
-        //   addEmploy();
-        //   break;
+        case "Add Employee":
+          addEmploy();
+          break;
         case "Add Department":
           addDepart();
           break;
@@ -137,9 +137,66 @@ const viewAllRoles = () => {
 
 // }
 
-// const addEmploy = () => {
 
-// }
+const addEmploy = () => {
+  dbconnect.promise().query(`SELECT * FROM roles`)
+  .then(([rows]) => {
+    let roles = rows;
+    const roleMap = roles.map(({ id, title }) => ({
+      name: title,
+      value: id
+    }));
+    
+    dbconnect.promise().query(`SELECT * FROM employee`)
+    .then(([rows]) => {
+      let employ = rows;
+ 
+      const manageMap = employ.map(({ first_name, last_name, id }) => ({
+        name: first_name + " " + last_name,
+        value: id
+      }));
+  inquirer
+  .prompt([
+    {
+      name: "first_name",
+      type: "input",
+      message: "What is the FIRST NAME of the employee?",
+    },
+    {
+      name: "last_name",
+      type: "input",
+      message: "What is the LAST NAME of the employee?",
+    },
+    {
+      name: "role",
+      type: "list",
+      message: "What is the ROLE of the employee?",
+      choices: roleMap
+    },
+    {
+      name: "manager",
+      type: "list",
+      message: "Who is the MANAGER of the employee?",
+      choices: manageMap
+    },
+  ])
+  .then(function (res) {
+    dbconnect.query("INSERT INTO employee SET ?", {
+      first_name: res.first_name,
+      last_name: res.last_name,
+      role_id: res.role,
+      manager_id: res.manager
+    }, function (err) {
+      if (err) throw err
+      console.table("Added " + res.first_name  + "  as a new Employee!")
+      renderPrompt()
+    })
+
+  })
+})
+})
+};
+
 const addDepart = () => {
   inquirer.prompt([
     {
@@ -176,8 +233,8 @@ const addDepart = () => {
 // }
 const delDepart = () => {
   dbconnect.promise().query("SELECT * FROM department")
-  .then(([rows]) => {
-    let depart = rows;
+    .then(([rows]) => {
+      let depart = rows;
       const departmentChoices = depart.map(({
         id,
         dept_name
@@ -192,12 +249,14 @@ const delDepart = () => {
         message: 'Which Department do you wish to remove?',
         choices: departmentChoices
       }])
-        .then(res => dbconnect.query(`DELETE FROM department WHERE department.id = ${res.dept_name}`,
-          function (err, res) {
-            if (err) throw err;
-            console.log('Removed department choice from database!')
-            renderPrompt()
-          }));
+        .then(res => {
+          dbconnect.query(`DELETE FROM department WHERE department.id = ${res.dept_name}`,
+            function (err) {
+              if (err) throw err;
+              console.log('Removed department choice from database!')
+              renderPrompt()
+            })
+        });
     });
 };
 
