@@ -43,7 +43,7 @@ const renderPrompt = () => {
           // "Add Role",
           // "Update Employee's Role",
           // "Update Employee Manager",
-          // "Delete Employee",
+          "Delete Employee",
           "Delete Department",
           // "View Budget by Department",
           "Exit App"
@@ -73,18 +73,18 @@ const renderPrompt = () => {
         case "Add Department":
           addDepart();
           break;
-        // case "Add Role":
-        //   addRole();
-        //   break;
-        // case "Update Employee Role":
-        //   updateEmployRole();
-        //   break;
+        case "Add Role":
+          addRole();
+          break;
+        case "Update Employee Role":
+          updateEmployRole();
+          break;
         // case "Update Employee Manager":
         //   updateEmployManage();
         //   break;
-        // case "Delete Employee":
-        //   delEmploy();
-        //   break;
+        case "Delete Employee":
+          delEmploy();
+          break;
         case "Delete Department":
           delDepart();
           break;
@@ -140,61 +140,61 @@ const viewAllRoles = () => {
 
 const addEmploy = () => {
   dbconnect.promise().query(`SELECT * FROM roles`)
-  .then(([rows]) => {
-    let roles = rows;
-    const roleMap = roles.map(({ id, title }) => ({
-      name: title,
-      value: id
-    }));
-    
-    dbconnect.promise().query(`SELECT * FROM employee`)
     .then(([rows]) => {
-      let employ = rows;
- 
-      const manageMap = employ.map(({ first_name, last_name, id }) => ({
-        name: first_name + " " + last_name,
+      let roles = rows;
+      const roleMap = roles.map(({ id, title }) => ({
+        name: title,
         value: id
       }));
-  inquirer
-  .prompt([
-    {
-      name: "first_name",
-      type: "input",
-      message: "What is the FIRST NAME of the employee?",
-    },
-    {
-      name: "last_name",
-      type: "input",
-      message: "What is the LAST NAME of the employee?",
-    },
-    {
-      name: "role",
-      type: "list",
-      message: "What is the ROLE of the employee?",
-      choices: roleMap
-    },
-    {
-      name: "manager",
-      type: "list",
-      message: "Who is the MANAGER of the employee?",
-      choices: manageMap
-    },
-  ])
-  .then(function (res) {
-    dbconnect.query("INSERT INTO employee SET ?", {
-      first_name: res.first_name,
-      last_name: res.last_name,
-      role_id: res.role,
-      manager_id: res.manager
-    }, function (err) {
-      if (err) throw err
-      console.table("Added " + res.first_name  + "  as a new Employee!")
-      renderPrompt()
-    })
 
-  })
-})
-})
+      dbconnect.promise().query(`SELECT * FROM employee`)
+        .then(([rows]) => {
+          let employ = rows;
+
+          const manageMap = employ.map(({ first_name, last_name, id }) => ({
+            name: first_name + " " + last_name,
+            value: id
+          }));
+          inquirer
+            .prompt([
+              {
+                name: "first_name",
+                type: "input",
+                message: "What is the FIRST NAME of the employee?",
+              },
+              {
+                name: "last_name",
+                type: "input",
+                message: "What is the LAST NAME of the employee?",
+              },
+              {
+                name: "role",
+                type: "list",
+                message: "What is the ROLE of the employee?",
+                choices: roleMap
+              },
+              {
+                name: "manager",
+                type: "list",
+                message: "Who is the MANAGER of the employee?",
+                choices: manageMap
+              },
+            ])
+            .then(function (res) {
+              dbconnect.query("INSERT INTO employee SET ?", {
+                first_name: res.first_name,
+                last_name: res.last_name,
+                role_id: res.role,
+                manager_id: res.manager
+              }, function (err) {
+                if (err) throw err
+                console.table("Added " + res.first_name + "  as a new Employee!")
+                renderPrompt()
+              })
+
+            })
+        })
+    })
 };
 
 const addDepart = () => {
@@ -217,20 +217,68 @@ const addDepart = () => {
 };
 
 // const addRole = () => {
-
+//   dbconnect.promise().query(`SELECT * FROM department`)
+//   .then(([rows]) => {
+//     let rol = rows;
+//     const departmentRole = rol.map(( { id, dept_name }) => ({
+//       name: dept_name,
+//       value: id
+//     }));
+//     inquirer
+//     .prompt([{
+//       name: "name",
+//       type: "input",
+//       message: "What NAME is the new Role?"
+//       },
+//       {
+//         name: "salary",
+//         type: "input",
+//         message: "What SALARY will the new Role have?"
+//       },
+//       {
+//         name: "department",
+//         type: "list",
+//         message: "Which DEPARTMENT will you assign the new Role?",
+//         choices: departmentRole
+//       }
+//     }])
+//   })
 // }
 
-// const updateEmployRole = () => {
+const updateEmployRole = () => {
 
-// }
+}
 // const updateEmployManage = () => {
 
 // }
 
 
-// const delEmploy = () => {
+const delEmploy = () => {
+  dbconnect.promise().query(`SELECT * FROM employee`)
+    .then(([rows]) => {
+      let employ = rows;
+      const employList = employ.map(({ id, first_name, last_name }) => ({
+        name: first_name + " " + last_name,
+        value: id
+      }));
+      inquirer.prompt([{
+        type: 'list',
+        name: 'name',
+        message: "Which EMPLOYEE do you wish to remove?",
+        choices: employList
+      }])
+        .then(res => {
+          dbconnect.query(`DELETE FROM employee WHERE employee.id = ${res.name} `,
+            function (err) {
+              if (err) throw err;
+              console.log('Employee has been removed!')
+              renderPrompt();
+            })
+        })
+    })
+}
 
-// }
+
 const delDepart = () => {
   dbconnect.promise().query("SELECT * FROM department")
     .then(([rows]) => {
