@@ -40,7 +40,7 @@ const renderPrompt = () => {
           // "View Employees by Manager",
           "Add Employee",
           "Add Department",
-          // "Add Role",
+          "Add Role",
           // "Update Employee's Role",
           // "Update Employee Manager",
           "Delete Employee",
@@ -216,34 +216,47 @@ const addDepart = () => {
     })
 };
 
-// const addRole = () => {
-//   dbconnect.promise().query(`SELECT * FROM department`)
-//   .then(([rows]) => {
-//     let rol = rows;
-//     const departmentRole = rol.map(( { id, dept_name }) => ({
-//       name: dept_name,
-//       value: id
-//     }));
-//     inquirer
-//     .prompt([{
-//       name: "name",
-//       type: "input",
-//       message: "What NAME is the new Role?"
-//       },
-//       {
-//         name: "salary",
-//         type: "input",
-//         message: "What SALARY will the new Role have?"
-//       },
-//       {
-//         name: "department",
-//         type: "list",
-//         message: "Which DEPARTMENT will you assign the new Role?",
-//         choices: departmentRole
-//       }
-//     }])
-//   })
-// }
+const addRole = () => {
+  dbconnect.promise().query(`SELECT * FROM department`)
+    .then(([rows]) => {
+      let rol = rows;
+      const departmentRole = rol.map(({ id, dept_name }) => ({
+        name: dept_name,
+        value: id
+      }));
+
+      inquirer
+        .prompt([
+          {
+            name: "title",
+            type: "input",
+            message: "What NAME is the new Role?"
+          },
+          {
+            name: "salary",
+            type: "input",
+            message: "What SALARY will the new Role have?"
+          },
+          {
+            name: "department_id",
+            type: "list",
+            message: "Which DEPARTMENT will you assign the new Role?",
+            choices: departmentRole
+          },
+        ])
+        .then(function (res) {
+          dbconnect.query("INSERT INTO roles SET ? ", {
+            title: res.title,
+            salary: res.salary,
+            department_id: res.department_id
+          }, function (err) {
+            if (err) throw err;
+            console.log("Added "+ res.title + " to the Role database!")
+            renderPrompt();
+          })
+        })
+    })
+}
 
 const updateEmployRole = () => {
 
