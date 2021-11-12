@@ -36,16 +36,12 @@ const renderPrompt = () => {
           "View all Employees",
           "View all Departments",
           "View all Roles",
-          // "View Employees by Department",
-          // "View Employees by Manager",
           "Add Employee",
           "Add Department",
           "Add Role",
-          // "Update Employee's Role",
-          // "Update Employee Manager",
           "Delete Employee",
           "Delete Department",
-          // "View Budget by Department",
+          "Delete Role",
           "Exit App"
         ]
       }
@@ -61,12 +57,6 @@ const renderPrompt = () => {
         case "View all Roles":
           viewAllRoles();
           break;
-        // case "View Employees by Department":
-        //   viewEmployByDepart();
-        //   break;
-        // case "View Employees by Manager":
-        //   viewEmployByManage();
-        //   break;
         case "Add Employee":
           addEmploy();
           break;
@@ -76,21 +66,15 @@ const renderPrompt = () => {
         case "Add Role":
           addRole();
           break;
-        case "Update Employee Role":
-          updateEmployRole();
-          break;
-        // case "Update Employee Manager":
-        //   updateEmployManage();
-        //   break;
         case "Delete Employee":
           delEmploy();
           break;
         case "Delete Department":
           delDepart();
           break;
-        // case "View Budget by Department":
-        //   viewBudget();
-        //   break;
+        case "Delete Role":
+          delRol();
+          break;
         case "Exit App":
           console.log("Bye-bye!");
           dbconnect.end();
@@ -130,13 +114,6 @@ const viewAllRoles = () => {
     }
   )
 }
-// const viewEmployByDepart = () => {
-
-// }
-// const viewEmployByManage = () => {
-
-// }
-
 
 const addEmploy = () => {
   dbconnect.promise().query(`SELECT * FROM roles`)
@@ -251,20 +228,12 @@ const addRole = () => {
             department_id: res.department_id
           }, function (err) {
             if (err) throw err;
-            console.log("Added "+ res.title + " to the Role database!")
+            console.log("Added " + res.title + " to the Role database!")
             renderPrompt();
           })
         })
     })
 }
-
-const updateEmployRole = () => {
-
-}
-// const updateEmployManage = () => {
-
-// }
-
 
 const delEmploy = () => {
   dbconnect.promise().query(`SELECT * FROM employee`)
@@ -321,10 +290,32 @@ const delDepart = () => {
     });
 };
 
+const delRol = () => {
+  dbconnect.promise().query("SELECT * FROM roles")
+    .then(([rows]) => {
+      let rol = rows;
+      const rolesList = rol.map(({ id, title }) => ({
+        name: title,
+        value: id
+      }));
 
-// const viewBudget = () => {
+      inquirer
+        .prompt([{
+          type: 'list',
+          name: 'title',
+          message: "Which ROLE do you want to remove?",
+          choices: rolesList
+        }])
+        .then(res => {
+          dbconnect.query(`DELETE FROM roles WHERE roles.id = ${res.title} `,
+            function (err) {
+              if (err) throw err;
+              console.log("Removed ROLE from Database!");
 
-// }
-
+              renderPrompt();
+            });
+        });
+    })
+}
 
 initPrompt();
