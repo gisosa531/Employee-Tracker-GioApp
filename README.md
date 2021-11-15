@@ -21,7 +21,12 @@ This is a command-line application from built from scratch to manage a company's
 ```
     npm install
 ```
-
+3. Access mysql in node.js by opening the terminal in the `db` directory to run the schema and seeds with the following commands:
+```
+1.  mysql -u root -p
+2.  source db/schema.sql
+3.  source db/seeds.sql
+```
 
 ## Usage Information
 The first step is to open the indicated file (server.js) in an integrated terminal. 
@@ -29,7 +34,6 @@ Using Node.js, we use the following command:
 ```
 node server.js 
 ```
-
 
 ## License
 ![license](https://img.shields.io/badge/License-MIT-yellow.svg)
