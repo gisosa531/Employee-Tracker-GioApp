@@ -53,7 +53,11 @@ Thanks to:
 
 ## Images/Video
 Walkthrough:
-<img src=" " alt=" ">
+
+
+
+https://user-images.githubusercontent.com/84998291/141734274-d3a62e21-86ac-4b18-b2f4-5492f14dfc08.mp4
+
 
 ## Contact Information
 If you have any problems concerning the repo, please file an issue or email me at 
